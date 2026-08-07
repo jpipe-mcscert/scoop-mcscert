@@ -32,21 +32,21 @@ All four steps are required:
 
 ### Installing a specific version
 
-The bucket always offers the current release. Asking for an older one with
-`scoop install mcscert/jpipe@2.2.0` **does not work** — Scoop can only
-reconstruct a non-current version from a manifest carrying an `autoupdate`
-block, which this bucket deliberately omits (see [Maintenance](#maintenance)),
-so the install aborts with *"does not have autoupdate capability"*.
-
-If you have installed several versions over time, Scoop keeps them on disk and
-you can switch between those copies:
+The bucket manifest always names the current release, but an older one can be
+requested explicitly:
 
 ```pwsh
-scoop reset jpipe@2.2.0    # switch to an already-installed version
+scoop install mcscert/jpipe@2.3.0    # install a specific release
+scoop reset jpipe@2.4.0              # switch to an already-installed version
 ```
 
-Otherwise, download the release you need directly from
-[jpipe-compiler](https://github.com/jpipe-mcscert/jpipe-compiler/releases).
+Scoop reconstructs the older manifest from the `autoupdate` block: it
+substitutes the requested version into the download URL and computes the hash
+by downloading the archive. **Versions before 2.3.0 are not available this
+way** — they predate Windows packaging and publish no `.zip` asset, so the
+download 404s. Take those from the
+[jpipe-compiler releases page](https://github.com/jpipe-mcscert/jpipe-compiler/releases)
+instead.
 
 ## Maintenance
 
@@ -54,7 +54,12 @@ Manifests in this bucket are **updated automatically and must not be edited by
 hand.** The `release.yml` pipeline in each source repository bumps the
 `version`, `url`, and `hash` fields when a release tag is pushed, and commits
 the result here. Everything else in a manifest — `depends`, `bin`,
-`post_install` — is owned by this repository.
+`post_install`, `autoupdate` — is owned by this repository.
+
+Manifests carry `autoupdate` but deliberately **no `checkver`**: the block is
+used only to reconstruct a manifest when someone asks for an explicit
+`@version`. Nothing in this repository polls for new releases or updates
+itself — the source repository's release pipeline remains the only writer.
 
 For jPipe, that policy is recorded in
 [ADR-0025](https://github.com/jpipe-mcscert/jpipe-compiler/blob/main/docs/adr/0025-mainstream-platform-distribution.md).
