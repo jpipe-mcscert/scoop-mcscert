@@ -8,18 +8,21 @@ A [Scoop](https://scoop.sh) bucket for software released by
 ## Installation
 
 ```pwsh
+scoop install git
+scoop bucket add java
 scoop bucket add mcscert https://github.com/jpipe-mcscert/scoop-mcscert
 scoop install mcscert/jpipe
 ```
 
-Scoop resolves the Java 25 runtime and Graphviz automatically, adding the
-`java` bucket if it is not already present.
+All four steps are required:
 
-> [!NOTE]
-> The `jpipe` manifest is seeded with placeholder `version`, `url` and `hash`
-> values, so `scoop install` does not work yet. It starts working once the
-> jpipe-compiler release pipeline publishes a Windows `.zip` asset and pushes
-> the real values here — see [Maintenance](#maintenance).
+- **`git`** — `scoop bucket add` clones the bucket repository, and Scoop
+  refuses to add a bucket without it.
+- **the `java` bucket** — jPipe depends on `java/temurin25-jre`. Scoop
+  resolves dependencies only against buckets you have already added; it will
+  **not** add a missing one for you, and the install fails if `java` is
+  absent. Graphviz comes from `main`, which Scoop adds by default, so it
+  needs no equivalent step.
 
 ## Manifests
 
@@ -29,13 +32,21 @@ Scoop resolves the Java 25 runtime and Graphviz automatically, adding the
 
 ### Installing a specific version
 
-Manifests are updated with one commit per release, so any previously released
-version can be installed from the bucket's history:
+The bucket always offers the current release. Asking for an older one with
+`scoop install mcscert/jpipe@2.2.0` **does not work** — Scoop can only
+reconstruct a non-current version from a manifest carrying an `autoupdate`
+block, which this bucket deliberately omits (see [Maintenance](#maintenance)),
+so the install aborts with *"does not have autoupdate capability"*.
+
+If you have installed several versions over time, Scoop keeps them on disk and
+you can switch between those copies:
 
 ```pwsh
-scoop install mcscert/jpipe@2.3.0    # install a specific release
-scoop reset jpipe@2.4.0              # switch back to another installed version
+scoop reset jpipe@2.2.0    # switch to an already-installed version
 ```
+
+Otherwise, download the release you need directly from
+[jpipe-compiler](https://github.com/jpipe-mcscert/jpipe-compiler/releases).
 
 ## Maintenance
 
