@@ -19,5 +19,8 @@
         "$java = Join-Path (& scoop prefix temurin25-jre) 'bin\\java.exe'",
         "$p = Join-Path $dir 'jpipe.ps1'",
         "(Get-Content $p -Raw).Replace('@@JAVA@@', $java).Replace('@@PREFIX@@', $dir) | Set-Content $p -NoNewline"
-    ]
+    ],
+    "autoupdate": {
+        "url": "https://github.com/jpipe-mcscert/jpipe-compiler/releases/download/v$version/jpipe-$version.zip"
+    }
 }
