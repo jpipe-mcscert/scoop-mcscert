@@ -9,11 +9,17 @@ A [Scoop](https://scoop.sh) bucket for software released by
 
 ```pwsh
 scoop bucket add mcscert https://github.com/jpipe-mcscert/scoop-mcscert
-scoop install jpipe
+scoop install mcscert/jpipe
 ```
 
 Scoop resolves the Java 25 runtime and Graphviz automatically, adding the
 `java` bucket if it is not already present.
+
+> [!NOTE]
+> The `jpipe` manifest is seeded with placeholder `version`, `url` and `hash`
+> values, so `scoop install` does not work yet. It starts working once the
+> jpipe-compiler release pipeline publishes a Windows `.zip` asset and pushes
+> the real values here — see [Maintenance](#maintenance).
 
 ## Manifests
 
@@ -27,8 +33,8 @@ Manifests are updated with one commit per release, so any previously released
 version can be installed from the bucket's history:
 
 ```pwsh
-scoop install jpipe@2.3.0    # install a specific release
-scoop reset jpipe@2.4.0      # switch back to another installed version
+scoop install mcscert/jpipe@2.3.0    # install a specific release
+scoop reset jpipe@2.4.0              # switch back to another installed version
 ```
 
 ## Maintenance
